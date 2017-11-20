@@ -5660,6 +5660,8 @@ public ArrayList<ConsultaFuncionamiento> consultaFuncionamientoArray(Long idAdmi
 		this.conn = darConexion();
 		daoC.setConn(conn);
 		
+		
+		
 		Integer numpedidos = daoC.numeroDePedidos(idRestaurante);
 		Double ganaciasGen = daoC.gananciasGenerdas(idRestaurante);
 		
