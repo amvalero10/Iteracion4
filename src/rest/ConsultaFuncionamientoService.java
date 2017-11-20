@@ -39,19 +39,19 @@ public class ConsultaFuncionamientoService {
 	}
 	
 	
-	@GET
-	@Produces( { MediaType.APPLICATION_JSON } )
-	public Response consultaFuncionamiento(@PathParam("idAdministradores") Long idAdministradores) throws Exception {
-		
-		RotondAndesTM tm = new RotondAndesTM(getPath());
-		
-		ArrayList<ConsultaFuncionamiento> listConsulta = tm.consultaFuncionamientoArray(idAdministradores);
-		
-		
-		
-//		ConsultaFuncionamiento cf = tm.con
-
-	}
+//	@GET
+//	@Produces( { MediaType.APPLICATION_JSON } )
+//	public Response consultaFuncionamiento(@PathParam("idAdministradores") Long idAdministradores) throws Exception {
+//		
+//		RotondAndesTM tm = new RotondAndesTM(getPath());
+//		
+//		ArrayList<ConsultaFuncionamiento> listConsulta = tm.consultaFuncionamientoArray(idAdministradores);
+//		
+//		
+//		
+////		ConsultaFuncionamiento cf = tm.con
+//
+//	}
 	
 	
 }

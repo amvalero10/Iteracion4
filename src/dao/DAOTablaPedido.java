@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import vos.ClienteUs;
 import vos.Pedido;
@@ -78,7 +79,7 @@ public class DAOTablaPedido {
 			Long idPlato = rs.getLong("ID_PLATO");
 			Long idBebida = rs.getLong("ID_BEBIDA");
 			Long idPostre = rs.getLong("ID_POSTRE");
-			Long fecha = rs.getLong("FECHA");
+			Date fecha = rs.getDate("FECHA"); 
 			String estado = rs.getString("ESTADO");
 			Long idRestaurante = rs.getLong("ID_RESTAURANTE");
 			pedidos.add(new Pedido(id, idUsuario, mesa, costo, idEntrada, idAcomp, idPlato, idBebida, idPostre, fecha, estado, idRestaurante));
@@ -105,7 +106,7 @@ public class DAOTablaPedido {
 			Long idPlato = rs.getLong("ID_PLATO");
 			Long idBebida = rs.getLong("ID_BEBIDA");
 			Long idPostre = rs.getLong("ID_POSTRE");
-			Long fecha = rs.getLong("FECHA");
+			Date fecha = rs.getDate("FECHA");
 			String estado = rs.getString("ESTADO");
 			Long idRestaurante = rs.getLong("ID_RESTAURANTE");
 			pedidos.add(new Pedido(id1, idUsuario, mesa, costo, idEntrada, idAcomp, idPlato, idBebida, idPostre, fecha, estado, idRestaurante));
@@ -141,7 +142,7 @@ public class DAOTablaPedido {
 			Long idPlato = rs.getLong("ID_PLATO");
 			Long idBebida = rs.getLong("ID_BEBIDA");
 			Long idPostre = rs.getLong("ID_POSTRE");
-			Long fecha = rs.getLong("FECHA");
+			Date fecha = rs.getDate("FECHA");
 			String estado = rs.getString("ESTADO");
 			Long idRestaurante = rs.getLong("ID_RESTAURANTE");
 			pedido = new Pedido(id2, idUsuario, mesa, costo, idEntrada, idAcomp, idPlato, idBebida, idPostre, fecha, estado, idRestaurante);
