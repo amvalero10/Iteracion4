@@ -115,7 +115,7 @@ public class CancelarPedidoService {
 		{
 		try {
 			
-			Pedido pedido = new Pedido(idPedido, idCliente, 0, 0, 0, 0, 0, 0, 0, 0, null, 0);
+			Pedido pedido = new Pedido(idPedido, idCliente, 0, 0, 0, 0, 0, 0, 0, null, null, 0);
 			
 			tm.deletePedido(pedido);
 			
