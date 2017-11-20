@@ -23,6 +23,7 @@ import vos.AdministradorUs;
 import vos.Bebida;
 import vos.CancelarPedido;
 import vos.ClienteUs;
+import vos.ConsultaFuncionamiento;
 import vos.ConsultaPedidoProducto;
 import vos.ConsultaPedidos;
 import vos.ConsultaPedidosAux;
@@ -5640,6 +5641,53 @@ public class RotondAndesTM {
 				
 				
 				
+	
+	
+////////////
+//RFc11
+////////////
+public ArrayList<ConsultaFuncionamiento> consultaFuncionamientoArray(Long idAdministrador) throws Exception{
+
+	ArrayList<ConsultaFuncionamiento> cfArray = null;
+	
+	DAOConsultaPedidos daoC = new DAOConsultaPedidos();
+	
+	try 
+	{
+		
+		
+		//////transaccion
+		this.conn = darConexion();
+		daoC.setConn(conn);
+		
+		Integer numpedidos = daoC.numeroDePedidos(idRestaurante);
+		Double ganaciasGen = daoC.gananciasGenerdas(idRestaurante);
+		
+		
+	
+		
+		
+	} catch (SQLException e) {
+		System.err.println("SQLException:" + e.getMessage());
+		e.printStackTrace();
+		throw e;
+	} catch (Exception e) {
+		System.err.println("GeneralException:" + e.getMessage());
+		e.printStackTrace();
+		throw e;
+	} finally {
+		try {
+			daoC.cerrarRecursos();
+			if(this.conn!=null)
+				this.conn.close();
+		} catch (SQLException exception) {
+			System.err.println("SQLException closing resources:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		}
+	}
+	return cfArray;	
+}
 		
 		
 		
