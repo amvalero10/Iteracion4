@@ -107,16 +107,25 @@ public class DAOTablaClienteUs {
 		return clientes;
 	}
 	
-	public ArrayList<ClienteUs> buscarClientesPedidoFecha() throws SQLException{
+	public ArrayList<ClienteUs> buscarClientesPedidoFecha(Date ini, Date fin, String ordenar) throws SQLException{
 		ArrayList<ClienteUs> clientes = new ArrayList<ClienteUs>();
-//		String sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
+		String sql = "";
+		if(ordenar.equals("nada")){
+			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
+					+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
+					+ "where p.FECHA > '"+ini+"' AND p.FECHA < '"+fin+"'"
+					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL";
+		}else{
+			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
+					+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
+					+ "where p.FECHA > '"+ini+"' AND p.FECHA < '"+fin+"' "
+					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL "
+					+ "ORDER BY c."+ordenar;
+		}
+//		String sql2 = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
 //				+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
-//				+ "where p.FECHA > '"+ini+"' AND p.FECHA < '"+fin+"'"
-//				+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL;";
-		String sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
-				+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
-				+ "where p.FECHA > '01-01-2016' AND p.FECHA < '31-12-2017' "
-				+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL";
+//				+ "where p.FECHA > '01-01-2016' AND p.FECHA < '31-12-2017' "
+//				+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL";
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
@@ -133,6 +142,41 @@ public class DAOTablaClienteUs {
 		return clientes;
 	}
 
+	public ArrayList<ClienteUs> buscarClientesPedidoFechaPedido(Date ini, Date fin, String ordenar) throws SQLException{
+		ArrayList<ClienteUs> clientes = new ArrayList<ClienteUs>();
+		String sql = "";
+		if(ordenar.equals("nada")){
+			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
+					+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
+					+ "where p.FECHA > '"+ini+"' AND p.FECHA < '"+fin+"'"
+					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL";
+		}else{
+			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
+					+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
+					+ "where p.FECHA > '"+ini+"' AND p.FECHA < '"+fin+"' "
+					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL "
+					+ "ORDER BY c."+ordenar;
+		}
+//		String sql2 = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
+//				+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
+//				+ "where p.FECHA > '01-01-2016' AND p.FECHA < '31-12-2017' "
+//				+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL";
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+
+		while (rs.next()) {
+			String nombre = rs.getString("NOMBRE");
+			Long id = rs.getLong("ID");
+			String tipoId = rs.getString("TIPOID");
+			String correo = rs.getString("CORREO");
+			String rol = rs.getString("ROL");
+			clientes.add(new ClienteUs(id, tipoId, nombre, correo, rol));
+		}
+
+		return clientes;
+	}
+	
 	/**
 	 * Metodo que busca el clientes con el id que entra como parametro.
 	 * @param name - Id de el clientes a buscar

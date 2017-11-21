@@ -1436,15 +1436,19 @@ public class RotondAndesTM {
 			return administradores;
 		}
 
-		public List<ClienteUs> buscarClientesPedidoFecha() throws Exception {
+		public List<ClienteUs> buscarClientesPedidoFecha(Long id, Date ini, Date fin, String ordenar) throws Exception {
 			List<ClienteUs> clientes;
 			DAOTablaClienteUs daoClienteUs = new DAOTablaClienteUs();
+			DAOTablaAdministradorUs daoAdmin = new DAOTablaAdministradorUs();
 			try 
 			{
 				//////transaccion
 				this.conn = darConexion();
 				daoClienteUs.setConn(conn);
-				clientes = daoClienteUs.buscarClientesPedidoFecha();
+				daoAdmin.setConn(conn);
+				AdministradorUs admin = daoAdmin.buscarAdministradorPorId(id);
+				if(admin==null) throw new Exception("no se encontro el admin");
+				clientes = daoClienteUs.buscarClientesPedidoFecha(ini, fin, ordenar);
 
 			} catch (SQLException e) {
 				System.err.println("SQLException:" + e.getMessage());
@@ -1468,6 +1472,41 @@ public class RotondAndesTM {
 			return clientes;
 		}
 		
+		public List<ClienteUs> buscarClientesPedidoFechaPedido(Long id, Date ini, Date fin, String ordenar) throws Exception {
+			List<ClienteUs> clientes;
+			DAOTablaClienteUs daoClienteUs = new DAOTablaClienteUs();
+			DAOTablaAdministradorUs daoAdmin = new DAOTablaAdministradorUs();
+			try 
+			{
+				//////transaccion
+				this.conn = darConexion();
+				daoClienteUs.setConn(conn);
+				daoAdmin.setConn(conn);
+				AdministradorUs admin = daoAdmin.buscarAdministradorPorId(id);
+				if(admin==null) throw new Exception("no se encontro el admin");
+				clientes = daoClienteUs.buscarClientesPedidoFechaPedido(ini, fin, ordenar);
+
+			} catch (SQLException e) {
+				System.err.println("SQLException:" + e.getMessage());
+				e.printStackTrace();
+				throw e;
+			} catch (Exception e) {
+				System.err.println("GeneralException:" + e.getMessage());
+				e.printStackTrace();
+				throw e;
+			} finally {
+				try {
+					daoClienteUs.cerrarRecursos();
+					if(this.conn!=null)
+						this.conn.close();
+				} catch (SQLException exception) {
+					System.err.println("SQLException closing resources:" + exception.getMessage());
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			return clientes;
+		}
 		/**
 		 * Metodo que modela la transaccion que busca el video en la base de datos con el id que entra como parametro.
 		 * @param name - Id del video a buscar. name != null

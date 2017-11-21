@@ -117,9 +117,10 @@ public class AdministradorUsService {
 	}
 
 	@GET
-	@Path( "{id: \\d+}/clientes" )
+	@Path( "{id: \\d+}/clientes/{ini}/{fin}/{ordenar}" )
 	@Produces( { MediaType.APPLICATION_JSON } )
-	public Response getClientesPedidoFecha( @PathParam( "id" ) Long id) {
+	public Response getClientesPedidoFecha( @PathParam( "id" ) Long id, @PathParam( "ini" ) Date ini, @PathParam( "fin" ) Date fin,
+			@PathParam( "ordenar" ) String ordenar) {
 		RotondAndesTM tm = new RotondAndesTM(getPath());
 		List<ClienteUs> clientes = new ArrayList<ClienteUs>();
 		
@@ -127,7 +128,26 @@ public class AdministradorUsService {
 			//if (name == null || name.length() == 0)
 			//	throw new Exception("Nombre del video no valido");
 			//clientes = tm.buscarClientesPedidoFecha(ini, fin);
-			clientes = tm.buscarClientesPedidoFecha();
+			clientes = tm.buscarClientesPedidoFecha(id, ini, fin, ordenar);
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).entity(clientes).build();
+	}
+	
+	@GET
+	@Path( "{id: \\d+}/clientes/{ini}/{fin}/pedido/{ordenar}" )
+	@Produces( { MediaType.APPLICATION_JSON } )
+	public Response getClientesPedidoFechaPedido( @PathParam( "id" ) Long id, @PathParam( "ini" ) Date ini, @PathParam( "fin" ) Date fin,
+			@PathParam( "ordenar" ) String ordenar) {
+		RotondAndesTM tm = new RotondAndesTM(getPath());
+		List<ClienteUs> clientes = new ArrayList<ClienteUs>();
+		
+		try {
+			//if (name == null || name.length() == 0)
+			//	throw new Exception("Nombre del video no valido");
+			//clientes = tm.buscarClientesPedidoFecha(ini, fin);
+			clientes = tm.buscarClientesPedidoFechaPedido(id, ini, fin, ordenar);
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
