@@ -22,6 +22,7 @@ import jdk.nashorn.internal.ir.annotations.Ignore;
 import tm.RotondAndesTM;
 import vos.AdministradorUs;
 import vos.ClienteUs;
+import vos.ConsultaClientesFecha;
 import vos.Zona;
 
 
@@ -116,38 +117,44 @@ public class AdministradorUsService {
 		return Response.status(200).entity(administradores).build();
 	}
 
-	@GET
-	@Path( "{id: \\d+}/clientes/{ini}/{fin}/{ordenar}" )
-	@Produces( { MediaType.APPLICATION_JSON } )
-	public Response getClientesPedidoFecha( @PathParam( "id" ) Long id, @PathParam( "ini" ) Date ini, @PathParam( "fin" ) Date fin,
-			@PathParam( "ordenar" ) String ordenar) {
+	@POST
+	@Path( "{id: \\d+}/clientes/" )
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getClientesPedidoFecha( @PathParam( "id" ) Long id, ConsultaClientesFecha cosulta) {
 		RotondAndesTM tm = new RotondAndesTM(getPath());
 		List<ClienteUs> clientes = new ArrayList<ClienteUs>();
-		
+		Date ini= new Date(cosulta.getYini(), cosulta.getMini(), cosulta.getDini());
+		Date fin= new Date(cosulta.getYfin(), cosulta.getMfin(), cosulta.getDfin());
+		String ordenar = cosulta.getOrdenar();
+		int idr = cosulta.getIdr();
 		try {
 			//if (name == null || name.length() == 0)
 			//	throw new Exception("Nombre del video no valido");
 			//clientes = tm.buscarClientesPedidoFecha(ini, fin);
-			clientes = tm.buscarClientesPedidoFecha(id, ini, fin, ordenar);
+			clientes = tm.buscarClientesPedidoFecha(id, ini, fin, ordenar, idr);
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}
 		return Response.status(200).entity(clientes).build();
 	}
 	
-	@GET
-	@Path( "{id: \\d+}/clientes/{ini}/{fin}/pedido/{ordenar}" )
-	@Produces( { MediaType.APPLICATION_JSON } )
-	public Response getClientesPedidoFechaPedido( @PathParam( "id" ) Long id, @PathParam( "ini" ) Date ini, @PathParam( "fin" ) Date fin,
-			@PathParam( "ordenar" ) String ordenar) {
+	@POST
+	@Path( "{id: \\d+}/clientespedido/" )
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getClientesPedidoFechaPedido( @PathParam( "id" ) Long id,ConsultaClientesFecha cosulta) {
 		RotondAndesTM tm = new RotondAndesTM(getPath());
 		List<ClienteUs> clientes = new ArrayList<ClienteUs>();
-		
+		Date ini= new Date(cosulta.getYini(), cosulta.getMini(), cosulta.getDini());
+		Date fin= new Date(cosulta.getYfin(), cosulta.getMfin(), cosulta.getDfin());
+		String ordenar = cosulta.getOrdenar();
+		int idr = cosulta.getIdr();
 		try {
 			//if (name == null || name.length() == 0)
 			//	throw new Exception("Nombre del video no valido");
 			//clientes = tm.buscarClientesPedidoFecha(ini, fin);
-			clientes = tm.buscarClientesPedidoFechaPedido(id, ini, fin, ordenar);
+			clientes = tm.buscarClientesPedidoFechaPedido(id, ini, fin, ordenar, idr);
 		} catch (Exception e) {
 			return Response.status(500).entity(doErrorMessage(e)).build();
 		}

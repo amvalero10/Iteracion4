@@ -107,18 +107,18 @@ public class DAOTablaClienteUs {
 		return clientes;
 	}
 	
-	public ArrayList<ClienteUs> buscarClientesPedidoFecha(Date ini, Date fin, String ordenar) throws SQLException{
+	public ArrayList<ClienteUs> buscarClientesPedidoFecha(Date ini, Date fin, String ordenar, int idr) throws SQLException{
 		ArrayList<ClienteUs> clientes = new ArrayList<ClienteUs>();
 		String sql = "";
 		if(ordenar.equals("nada")){
 			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
 					+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
-					+ "where p.FECHA > '"+ini+"' AND p.FECHA < '"+fin+"'"
+					+ "where p.FECHA > '"+ini.getDate()+"/"+ini.getMonth()+"/"+ini.getYear()+"' AND p.FECHA < '"+fin.getDate()+"/"+fin.getMonth()+"/"+fin.getYear()+"' AND p.ID_RESTAURANTE ="+idr+" "
 					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL";
 		}else{
 			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
 					+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
-					+ "where p.FECHA > '"+ini+"' AND p.FECHA < '"+fin+"' "
+					+ "where p.FECHA > '"+ini.getDate()+"/"+ini.getMonth()+"/"+ini.getYear()+"' AND p.FECHA < '"+fin.getDate()+"/"+fin.getMonth()+"/"+fin.getYear()+"' AND p.ID_RESTAURANTE ="+idr+" "
 					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL "
 					+ "ORDER BY c."+ordenar;
 		}
@@ -142,15 +142,15 @@ public class DAOTablaClienteUs {
 		return clientes;
 	}
 
-	public ArrayList<ClienteUs> buscarClientesPedidoFechaPedido(Date ini, Date fin, String ordenar) throws SQLException{
+	public ArrayList<ClienteUs> buscarClientesPedidoFechaPedido(Date ini, Date fin, String ordenar, int idr) throws SQLException{
 		ArrayList<ClienteUs> clientes = new ArrayList<ClienteUs>();
 		String sql = "";
 		
-			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
+			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL,p."+ordenar+" "
 					+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
-					+ "where p.FECHA > '"+ini+"' AND p.FECHA < '"+fin+"' "
-					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL "
-					+ "ORDER BY c."+ordenar;
+					+ "where p.FECHA > '"+ini.getDate()+"/"+ini.getMonth()+"/"+ini.getYear()+"' AND p.FECHA < '"+fin.getDate()+"/"+fin.getMonth()+"/"+fin.getYear()+"' AND p.ID_RESTAURANTE ="+idr+" "
+					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL, p."+ordenar+" "
+					+ "ORDER BY p."+ordenar;
 		
 //		select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL, p.ESTADO 
 //		 from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO 

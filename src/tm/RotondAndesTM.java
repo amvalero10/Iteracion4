@@ -1436,7 +1436,7 @@ public class RotondAndesTM {
 			return administradores;
 		}
 
-		public List<ClienteUs> buscarClientesPedidoFecha(Long id, Date ini, Date fin, String ordenar) throws Exception {
+		public List<ClienteUs> buscarClientesPedidoFecha(Long id, Date ini, Date fin, String ordenar, int idr) throws Exception {
 			List<ClienteUs> clientes;
 			DAOTablaClienteUs daoClienteUs = new DAOTablaClienteUs();
 			DAOTablaAdministradorUs daoAdmin = new DAOTablaAdministradorUs();
@@ -1448,7 +1448,7 @@ public class RotondAndesTM {
 				daoAdmin.setConn(conn);
 				AdministradorUs admin = daoAdmin.buscarAdministradorPorId(id);
 				if(admin==null) throw new Exception("no se encontro el admin");
-				clientes = daoClienteUs.buscarClientesPedidoFecha(ini, fin, ordenar);
+				clientes = daoClienteUs.buscarClientesPedidoFecha(ini, fin, ordenar, idr);
 
 			} catch (SQLException e) {
 				System.err.println("SQLException:" + e.getMessage());
@@ -1461,6 +1461,7 @@ public class RotondAndesTM {
 			} finally {
 				try {
 					daoClienteUs.cerrarRecursos();
+					daoAdmin.cerrarRecursos();
 					if(this.conn!=null)
 						this.conn.close();
 				} catch (SQLException exception) {
@@ -1472,7 +1473,7 @@ public class RotondAndesTM {
 			return clientes;
 		}
 		
-		public List<ClienteUs> buscarClientesPedidoFechaPedido(Long id, Date ini, Date fin, String ordenar) throws Exception {
+		public List<ClienteUs> buscarClientesPedidoFechaPedido(Long id, Date ini, Date fin, String ordenar, int idr) throws Exception {
 			List<ClienteUs> clientes;
 			DAOTablaClienteUs daoClienteUs = new DAOTablaClienteUs();
 			DAOTablaAdministradorUs daoAdmin = new DAOTablaAdministradorUs();
@@ -1484,7 +1485,7 @@ public class RotondAndesTM {
 				daoAdmin.setConn(conn);
 				AdministradorUs admin = daoAdmin.buscarAdministradorPorId(id);
 				if(admin==null) throw new Exception("no se encontro el admin");
-				clientes = daoClienteUs.buscarClientesPedidoFechaPedido(ini, fin, ordenar);
+				clientes = daoClienteUs.buscarClientesPedidoFechaPedido(ini, fin, ordenar, idr);
 
 			} catch (SQLException e) {
 				System.err.println("SQLException:" + e.getMessage());
@@ -1497,6 +1498,7 @@ public class RotondAndesTM {
 			} finally {
 				try {
 					daoClienteUs.cerrarRecursos();
+					daoAdmin.cerrarRecursos();
 					if(this.conn!=null)
 						this.conn.close();
 				} catch (SQLException exception) {
