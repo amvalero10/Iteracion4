@@ -8,9 +8,8 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import vos.AbstractAlimento;
-import vos.ConsultaFuncionamiento;
-import vos.Restaurante;
 import vos.RestauranteAux;
+import vos.VOComparacionAli;
 
 /**
  * 
@@ -166,11 +165,433 @@ public class DAOConsultaFuncionamiento {
 	
 	
 	
+	
+	
+	public VOComparacionAli alimentoMasConsumido(Date fecha) throws SQLException, Exception {
+		
+		
+		VOComparacionAli vocComp = null;
+		
+		//sentencia para iniciar con entrada
+		String sql = "SELECT *\n" + 
+				"FROM\n" + 
+				"(\n" + 
+				"SELECT DISTINCT(P.ID_ENTRADA) AS ID, COUNT(P.ID_ENTRADA) AS VECES\n" + 
+				"FROM PEDIDO P\n" + 
+				"WHERE FECHA = TO_DATE('"+fecha+"','YYYY/MM/DD') AND ESTADO = 'Servido'\n" + 
+				"GROUP BY P.ID_ENTRADA\n" + 
+				"ORDER BY VECES DESC\n" + 
+				") WHERE ROWNUM = 1";
+		
+		PreparedStatement prepStmt = conn.prepareStatement(sql);
+		recursos.add(prepStmt);
+		ResultSet rs = prepStmt.executeQuery();
+		
+		while(rs.next()) {
+			
+			Integer id = rs.getInt("ID");
+			Integer veces = rs.getInt("VECES");	
+			vocComp = new VOComparacionAli(id, veces, "entrada");		
+		}
+		
+		vocComp = AuxAlimentoMasAcompaniamiento(vocComp, fecha);
+		vocComp = AuxAlimentoMasBebida(vocComp, fecha);
+		vocComp = AuxAlimentoMasPlatoFuerte(vocComp, fecha);
+		vocComp = AuxAlimentoMasPostre(vocComp, fecha);
+		
+		return vocComp;
+		
+	
+	}
 
 	
 	
+	//comparo con acompaniamiento
+	private VOComparacionAli AuxAlimentoMasAcompaniamiento(VOComparacionAli vopcomp, Date fecha) throws SQLException, Exception{
+		
+		//sentencia para iniciar con entrada
+				String sql = "SELECT *\n" + 
+						"FROM\n" + 
+						"(\n" + 
+						"SELECT DISTINCT(P.ID_ACOMP) AS ID, COUNT(P.ID_ACOMP) AS VECES\n" + 
+						"FROM PEDIDO P\n" + 
+						"WHERE FECHA = TO_DATE('"+fecha+"','YYYY/MM/DD') AND ESTADO = 'Servido'\n" + 
+						"GROUP BY P.ID_ACOMP\n" + 
+						"ORDER BY VECES DESC\n" + 
+						") \n" + 
+						"WHERE ROWNUM = 1";
+				
+				PreparedStatement prepStmt = conn.prepareStatement(sql);
+				recursos.add(prepStmt);
+				ResultSet rs = prepStmt.executeQuery();
+				
+				while(rs.next()) {
+					
+					Integer id = rs.getInt("ID");
+					Integer veces = rs.getInt("VECES");	
+					
+					if(veces > vopcomp.getVeces())
+					{
+						vopcomp.setId(id);
+						vopcomp.setVeces(veces);
+						vopcomp.setTipo("acompaniamiento");
+						return vopcomp;
+					}
+					else
+					{
+						return vopcomp;
+					}
+				}
+		return vopcomp;
+	}
 	
 	
+	
+	//comparno con bebeida
+	private VOComparacionAli AuxAlimentoMasBebida(VOComparacionAli vopcomp, Date fecha) throws SQLException, Exception{
+		
+		//sentencia para iniciar con entrada
+				String sql = "SELECT *\n" + 
+						"FROM\n" + 
+						"(\n" + 
+						"SELECT DISTINCT(P.ID_BEBIDA) AS ID, COUNT(P.ID_BEBIDA) AS VECES\n" + 
+						"FROM PEDIDO P\n" + 
+						"WHERE FECHA = TO_DATE('"+fecha+"','YYYY/MM/DD') AND ESTADO = 'Servido'\n" + 
+						"GROUP BY P.ID_BEBIDA\n" + 
+						"ORDER BY VECES DESC\n" + 
+						") \n" + 
+						"WHERE ROWNUM = 1";
+				
+				PreparedStatement prepStmt = conn.prepareStatement(sql);
+				recursos.add(prepStmt);
+				ResultSet rs = prepStmt.executeQuery();
+				
+				while(rs.next()) {
+					
+					Integer id = rs.getInt("ID");
+					Integer veces = rs.getInt("VECES");	
+					
+					if(veces > vopcomp.getVeces())
+					{
+						vopcomp.setId(id);
+						vopcomp.setVeces(veces);
+						vopcomp.setTipo("bebida");
+						return vopcomp;
+					}
+					else
+					{
+						return vopcomp;
+					}
+				}
+		return vopcomp;
+	}
 	
 
+	
+	
+	//comparo con PlatoFuerte
+		private VOComparacionAli AuxAlimentoMasPlatoFuerte(VOComparacionAli vopcomp, Date fecha) throws SQLException, Exception{
+			
+			//sentencia para iniciar con entrada
+					String sql = "SELECT *\n" + 
+							"FROM\n" + 
+							"(\n" + 
+							"SELECT DISTINCT(P.ID_PLATO) AS ID, COUNT(P.ID_PLATO) AS VECES\n" + 
+							"FROM PEDIDO P\n" + 
+							"WHERE FECHA = TO_DATE('"+fecha+"','YYYY/MM/DD') AND ESTADO = 'Servido'\n" + 
+							"GROUP BY P.ID_PLATO\n" + 
+							"ORDER BY VECES DESC\n" + 
+							") \n" + 
+							"WHERE ROWNUM = 1";
+					
+					PreparedStatement prepStmt = conn.prepareStatement(sql);
+					recursos.add(prepStmt);
+					ResultSet rs = prepStmt.executeQuery();
+					
+					while(rs.next()) {
+						
+						Integer id = rs.getInt("ID");
+						Integer veces = rs.getInt("VECES");	
+						
+						if(veces > vopcomp.getVeces())
+						{
+							vopcomp.setId(id);
+							vopcomp.setVeces(veces);
+							vopcomp.setTipo("platoFuerte");
+							return vopcomp;
+						}
+						else
+						{
+							return vopcomp;
+						}
+					}
+			return vopcomp;
+		}
+
+	
+
+		
+		//comparo con Postre
+				private VOComparacionAli AuxAlimentoMasPostre(VOComparacionAli vopcomp, Date fecha) throws SQLException, Exception{
+					
+					//sentencia para iniciar con entrada
+							String sql = "SELECT *\n" + 
+									"FROM\n" + 
+									"(\n" + 
+									"SELECT DISTINCT(P.ID_POSTRE) AS ID, COUNT(P.ID_POSTRE) AS VECES\n" + 
+									"FROM PEDIDO P\n" + 
+									"WHERE FECHA = TO_DATE('"+fecha+"','YYYY/MM/DD') AND ESTADO = 'Servido'\n" + 
+									"GROUP BY P.ID_POSTRE\n" + 
+									"ORDER BY VECES DESC\n" + 
+									") \n" + 
+									"WHERE ROWNUM = 1";
+							
+							PreparedStatement prepStmt = conn.prepareStatement(sql);
+							recursos.add(prepStmt);
+							ResultSet rs = prepStmt.executeQuery();
+							
+							while(rs.next()) {
+								
+								Integer id = rs.getInt("ID");
+								Integer veces = rs.getInt("VECES");	
+								
+								if(veces > vopcomp.getVeces())
+								{
+									vopcomp.setId(id);
+									vopcomp.setVeces(veces);
+									vopcomp.setTipo("postre");
+									return vopcomp;
+								}
+								else
+								{
+									return vopcomp;
+								}
+							}
+					return vopcomp;
+				}
+
+		
+		
+
+
+		
+				
+				//comparo con las entradas
+		public VOComparacionAli alimentoMenosCosumido(Date fecha)throws SQLException, Exception{
+			
+			VOComparacionAli vocComp = null;
+			
+			//sentencia para iniciar con entrada
+			String sql = "SELECT *\n" + 
+					"FROM\n" + 
+					"(\n" + 
+					"SELECT DISTINCT(P.ID_ENTRADA) AS ID, COUNT(P.ID_ENTRADA) AS VECES\n" + 
+					"FROM PEDIDO P\n" + 
+					"WHERE FECHA = TO_DATE('"+fecha+"','YYYY/MM/DD') AND ESTADO = 'Servido'\n" + 
+					"GROUP BY P.ID_ENTRADA\n" + 
+					"ORDER BY VECES ASC\n" + 
+					") \n" + 
+					"WHERE ROWNUM = 1";
+			
+			PreparedStatement prepStmt = conn.prepareStatement(sql);
+			recursos.add(prepStmt);
+			ResultSet rs = prepStmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				Integer id = rs.getInt("ID");
+				Integer veces = rs.getInt("VECES");	
+				vocComp = new VOComparacionAli(id, veces, "entrada");		
+			}
+			
+			vocComp = AuxAlimentoMenosAcompaniamiento(vocComp, fecha);
+			vocComp = AuxAlimentoMenosBebida(vocComp, fecha);
+			vocComp = AuxAlimentoMenosPlatoFuerte(vocComp, fecha);
+			vocComp = AuxAlimentoMenosPostre(vocComp, fecha);
+			
+			return vocComp;
+		}
+				
+		
+		
+				
+			
+		
+		
+		
+		//comparo con acompaniamiento
+		private VOComparacionAli AuxAlimentoMenosAcompaniamiento(VOComparacionAli vopcomp, Date fecha) throws SQLException, Exception{
+			
+			//sentencia para iniciar con entrada
+					String sql = "SELECT *\n" + 
+							"FROM\n" + 
+							"(\n" + 
+							"SELECT DISTINCT(P.ID_ACOMP) AS ID, COUNT(P.ID_ACOMP) AS VECES\n" + 
+							"FROM PEDIDO P\n" + 
+							"WHERE FECHA = TO_DATE('"+fecha+"','YYYY/MM/DD') AND ESTADO = 'Servido'\n" + 
+							"GROUP BY P.ID_ACOMP\n" + 
+							"ORDER BY VECES ASC\n" + 
+							") \n" + 
+							"WHERE ROWNUM = 1";
+					
+					PreparedStatement prepStmt = conn.prepareStatement(sql);
+					recursos.add(prepStmt);
+					ResultSet rs = prepStmt.executeQuery();
+					
+					while(rs.next()) {
+						
+						Integer id = rs.getInt("ID");
+						Integer veces = rs.getInt("VECES");	
+						
+						if(veces < vopcomp.getVeces())
+						{
+							vopcomp.setId(id);
+							vopcomp.setVeces(veces);
+							vopcomp.setTipo("acompaniamiento");
+							return vopcomp;
+						}
+						else
+						{
+							return vopcomp;
+						}
+					}
+			return vopcomp;
+		}
+				
+
+
+		
+		
+		//comparno con bebeida
+		private VOComparacionAli AuxAlimentoMenosBebida(VOComparacionAli vopcomp, Date fecha) throws SQLException, Exception{
+			
+			//sentencia para iniciar con entrada
+					String sql = "SELECT *\n" + 
+							"FROM\n" + 
+							"(\n" + 
+							"SELECT DISTINCT(P.ID_BEBIDA) AS ID, COUNT(P.ID_BEBIDA) AS VECES\n" + 
+							"FROM PEDIDO P\n" + 
+							"WHERE FECHA = TO_DATE('"+fecha+"','YYYY/MM/DD') AND ESTADO = 'Servido'\n" + 
+							"GROUP BY P.ID_BEBIDA\n" + 
+							"ORDER BY VECES ASC\n" + 
+							") \n" + 
+							"WHERE ROWNUM = 1";
+					
+					PreparedStatement prepStmt = conn.prepareStatement(sql);
+					recursos.add(prepStmt);
+					ResultSet rs = prepStmt.executeQuery();
+					
+					while(rs.next()) {
+						
+						Integer id = rs.getInt("ID");
+						Integer veces = rs.getInt("VECES");	
+						
+						if(veces < vopcomp.getVeces())
+						{
+							vopcomp.setId(id);
+							vopcomp.setVeces(veces);
+							vopcomp.setTipo("bebida");
+							return vopcomp;
+						}
+						else
+						{
+							return vopcomp;
+						}
+					}
+			return vopcomp;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		//comparo con PlatoFuerte
+				private VOComparacionAli AuxAlimentoMenosPlatoFuerte(VOComparacionAli vopcomp, Date fecha) throws SQLException, Exception{
+					
+					//sentencia para iniciar con entrada
+							String sql = "SELECT *\n" + 
+									"FROM\n" + 
+									"(\n" + 
+									"SELECT DISTINCT(P.ID_PLATO) AS ID, COUNT(P.ID_PLATO) AS VECES\n" + 
+									"FROM PEDIDO P\n" + 
+									"WHERE FECHA = TO_DATE('"+fecha+"','YYYY/MM/DD') AND ESTADO = 'Servido'\n" + 
+									"GROUP BY P.ID_PLATO\n" + 
+									"ORDER BY VECES ASC\n" + 
+									") \n" + 
+									"WHERE ROWNUM = 1";
+							
+							PreparedStatement prepStmt = conn.prepareStatement(sql);
+							recursos.add(prepStmt);
+							ResultSet rs = prepStmt.executeQuery();
+							
+							while(rs.next()) {
+								
+								Integer id = rs.getInt("ID");
+								Integer veces = rs.getInt("VECES");	
+								
+								if(veces < vopcomp.getVeces())
+								{
+									vopcomp.setId(id);
+									vopcomp.setVeces(veces);
+									vopcomp.setTipo("platoFuerte");
+									return vopcomp;
+								}
+								else
+								{
+									return vopcomp;
+								}
+							}
+					return vopcomp;
+				}
+		
+		
+		
+		
+				//comparo con Postre
+				private VOComparacionAli AuxAlimentoMenosPostre(VOComparacionAli vopcomp, Date fecha) throws SQLException, Exception{
+					
+					//sentencia para iniciar con entrada
+							String sql = "SELECT *\n" + 
+									"FROM\n" + 
+									"(\n" + 
+									"SELECT DISTINCT(P.ID_POSTRE) AS ID, COUNT(P.ID_POSTRE) AS VECES\n" + 
+									"FROM PEDIDO P\n" + 
+									"WHERE FECHA = TO_DATE('"+fecha+"','YYYY/MM/DD') AND ESTADO = 'Servido'\n" + 
+									"GROUP BY P.ID_POSTRE\n" + 
+									"ORDER BY VECES ASC\n" + 
+									") \n" + 
+									"WHERE ROWNUM = 1";
+							
+							PreparedStatement prepStmt = conn.prepareStatement(sql);
+							recursos.add(prepStmt);
+							ResultSet rs = prepStmt.executeQuery();
+							
+							while(rs.next()) {
+								
+								Integer id = rs.getInt("ID");
+								Integer veces = rs.getInt("VECES");	
+								
+								if(veces < vopcomp.getVeces())
+								{
+									vopcomp.setId(id);
+									vopcomp.setVeces(veces);
+									vopcomp.setTipo("postre");
+									return vopcomp;
+								}
+								else
+								{
+									return vopcomp;
+								}
+							}
+					return vopcomp;
+				}
+		
+		
+		
+		
+		
 }

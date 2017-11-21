@@ -41,6 +41,7 @@ import vos.Postre;
 import vos.RestauranteUs;
 import vos.ServidoProducto;
 import vos.Tarjeta;
+import vos.VOComparacionAli;
 import vos.Zona;
 import dao.DAOConsultaFuncionamiento;
 import dao.DAOConsultaPedidos;
@@ -5728,7 +5729,7 @@ public ArrayList<ConsultaFuncionamiento> consultaFuncionamientoArray(Long idAdmi
 		Iterator iterDates = fechasDisponibles.iterator();
 		
 //		while(iterDates.hasNext()) 
-		for (int i = 0; i < 50; i++)
+		for (int i = 0; i < 20; i++)
 		{
 			
 			
@@ -5737,12 +5738,33 @@ public ArrayList<ConsultaFuncionamiento> consultaFuncionamientoArray(Long idAdmi
 			
 			RestauranteAux restauranteMasvisitado = daoC.restauranteMasVisitado(dateActual);
 			RestauranteAux restauranteMenosVisi =  daoC.restauranteMenosVisitado(dateActual);
-
-			
 			
 			String dia = daoC.diaActual;
+			
+			
+			//alimento Mas consumido
+			AbstractAlimento aliMasCons = null;
+			
+			VOComparacionAli aliMasConsu = daoC.alimentoMasConsumido(dateActual);
+			if(aliMasConsu.getTipo().equalsIgnoreCase("entrada")) aliMasCons = buscarEntradaPorId((long) aliMasConsu.getId());
+			else if(aliMasConsu.getTipo().equalsIgnoreCase("acompaniamiento")) aliMasCons = buscarAcompaniamientoPorId((long) aliMasConsu.getId());
+			else if(aliMasConsu.getTipo().equalsIgnoreCase("bebida")) aliMasCons = buscarBebidaPorId((long) aliMasConsu.getId());
+			else if(aliMasConsu.getTipo().equalsIgnoreCase("platoFuerte")) aliMasCons = buscarPlatoFuerteId((long) aliMasConsu.getId());
+			else aliMasCons = buscarPostreId((long) aliMasConsu.getId());
+			
+			
+			//alimento menos consumido
+			AbstractAlimento alimentoMenosCons = null;
+			
+			VOComparacionAli alimenos = daoC.alimentoMenosCosumido(dateActual);
+					if(alimenos.getTipo().equalsIgnoreCase("entrada")) alimentoMenosCons = buscarEntradaPorId((long) alimenos.getId());
+					else if(alimenos.getTipo().equalsIgnoreCase("acompaniamiento")) alimentoMenosCons = buscarAcompaniamientoPorId((long) alimenos.getId());
+					else if(alimenos.getTipo().equalsIgnoreCase("bebida")) alimentoMenosCons = buscarBebidaPorId((long) alimenos.getId());
+					else if(alimenos.getTipo().equalsIgnoreCase("platoFuerte")) alimentoMenosCons = buscarPlatoFuerteId((long) alimenos.getId());
+					else alimentoMenosCons = buscarPostreId((long) alimenos.getId());
+			
 
-			ConsultaFuncionamiento consultActual = new ConsultaFuncionamiento(null, null, restauranteMasvisitado, restauranteMenosVisi, dateActual, dia);
+			ConsultaFuncionamiento consultActual = new ConsultaFuncionamiento(aliMasCons, alimentoMenosCons, restauranteMasvisitado, restauranteMenosVisi, dateActual, dia);
 			cfArray.add(consultActual);
 			
 			
