@@ -23,7 +23,10 @@ import vos.Acompaniamiento;
 import vos.AdministradorUs;
 import vos.Bebida;
 import vos.CancelarPedido;
+import vos.ClienteUSAux2;
 import vos.ClienteUs;
+import vos.ClienteUsAux;
+import vos.ConsultaBuenosClientes;
 import vos.ConsultaFuncionamiento;
 import vos.ConsultaPedidoProducto;
 import vos.ConsultaPedidos;
@@ -55,6 +58,7 @@ import dao.DAOTablaRestauranteUs;
 import dao.DAOTablaServido;
 import dao.DAOTablaTarjeta;
 import dao.DAOTablaZona;
+import dao.DaoConsultaBuenosClientes;
 
 
 
@@ -5639,6 +5643,57 @@ public class RotondAndesTM {
 	}
 				
 				
+	
+	
+	
+	
+	
+	////////////
+	//RFC12
+	////////////
+	public ConsultaBuenosClientes consultaBuenosClientesReq(long idAdmin) throws Exception{
+		
+		ConsultaBuenosClientes cbc = null;
+		
+		//valido el administrador
+		AdministradorUs admin = buscarAdministradorUsPorId(idAdmin);
+		if(admin == null) throw new Exception("No tiene permisos para acceder a estos recursos");
+
+		DaoConsultaBuenosClientes daoC = new DaoConsultaBuenosClientes();
+		
+		try 
+		{				
+			//////transaccion
+			this.conn = darConexion();
+			daoC.setConn(conn);
+			
+			ArrayList<ClienteUSAux2> cConsumoSemanal = daoC.ClientesConsumoSemanal();
+			ArrayList<ClienteUs> cSinConsumo = daoC.clientesSinConsumo();
+			ArrayList<ClienteUsAux> cPremium = daoC.clientesPremium();
+			
+			cbc = new ConsultaBuenosClientes(cConsumoSemanal, cPremium, cSinConsumo);
+	
+		} catch (SQLException e) {
+			System.err.println("SQLException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} catch (Exception e) {
+			System.err.println("GeneralException:" + e.getMessage());
+			e.printStackTrace();
+			throw e;
+		} finally {
+			try {
+				daoC.cerrarRecursos();
+				if(this.conn!=null)
+					this.conn.close();
+			} catch (SQLException exception) {
+				System.err.println("SQLException closing resources:" + exception.getMessage());
+				exception.printStackTrace();
+				throw exception;
+			}
+		}
+		return cbc;	
+	}
 				
 				
 				
