@@ -145,22 +145,18 @@ public class DAOTablaClienteUs {
 	public ArrayList<ClienteUs> buscarClientesPedidoFechaPedido(Date ini, Date fin, String ordenar) throws SQLException{
 		ArrayList<ClienteUs> clientes = new ArrayList<ClienteUs>();
 		String sql = "";
-		if(ordenar.equals("nada")){
-			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
-					+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
-					+ "where p.FECHA > '"+ini+"' AND p.FECHA < '"+fin+"'"
-					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL";
-		}else{
+		
 			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
 					+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
 					+ "where p.FECHA > '"+ini+"' AND p.FECHA < '"+fin+"' "
 					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL "
 					+ "ORDER BY c."+ordenar;
-		}
-//		String sql2 = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
-//				+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
-//				+ "where p.FECHA > '01-01-2016' AND p.FECHA < '31-12-2017' "
-//				+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL";
+		
+//		select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL, p.ESTADO 
+//		 from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO 
+//		 where p.FECHA > '01-01-2016' AND p.FECHA < '31-12-2017' 
+//		 GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL, p.ESTADO 
+//        ORDER BY p.ESTADO;
 		PreparedStatement prepStmt = conn.prepareStatement(sql);
 		recursos.add(prepStmt);
 		ResultSet rs = prepStmt.executeQuery();
