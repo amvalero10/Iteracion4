@@ -1435,6 +1435,38 @@ public class RotondAndesTM {
 			}
 			return administradores;
 		}
+
+		public List<ClienteUs> buscarClientesPedidoFecha() throws Exception {
+			List<ClienteUs> clientes;
+			DAOTablaClienteUs daoClienteUs = new DAOTablaClienteUs();
+			try 
+			{
+				//////transaccion
+				this.conn = darConexion();
+				daoClienteUs.setConn(conn);
+				clientes = daoClienteUs.buscarClientesPedidoFecha();
+
+			} catch (SQLException e) {
+				System.err.println("SQLException:" + e.getMessage());
+				e.printStackTrace();
+				throw e;
+			} catch (Exception e) {
+				System.err.println("GeneralException:" + e.getMessage());
+				e.printStackTrace();
+				throw e;
+			} finally {
+				try {
+					daoClienteUs.cerrarRecursos();
+					if(this.conn!=null)
+						this.conn.close();
+				} catch (SQLException exception) {
+					System.err.println("SQLException closing resources:" + exception.getMessage());
+					exception.printStackTrace();
+					throw exception;
+				}
+			}
+			return clientes;
+		}
 		
 		/**
 		 * Metodo que modela la transaccion que busca el video en la base de datos con el id que entra como parametro.

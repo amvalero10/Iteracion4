@@ -1,5 +1,7 @@
 package rest;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletContext;
@@ -20,7 +22,6 @@ import jdk.nashorn.internal.ir.annotations.Ignore;
 import tm.RotondAndesTM;
 import vos.AdministradorUs;
 import vos.ClienteUs;
-
 import vos.Zona;
 
 
@@ -115,7 +116,26 @@ public class AdministradorUsService {
 		return Response.status(200).entity(administradores).build();
 	}
 
+	@GET
+	@Path( "{id: \\d+}/clientes" )
+	@Produces( { MediaType.APPLICATION_JSON } )
+	public Response getClientesPedidoFecha( @PathParam( "id" ) Long id) {
+		RotondAndesTM tm = new RotondAndesTM(getPath());
+		List<ClienteUs> clientes = new ArrayList<ClienteUs>();
+		
+		try {
+			//if (name == null || name.length() == 0)
+			//	throw new Exception("Nombre del video no valido");
+			//clientes = tm.buscarClientesPedidoFecha(ini, fin);
+			clientes = tm.buscarClientesPedidoFecha();
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+		return Response.status(200).entity(clientes).build();
+	}
 
+	
+	
     /**
      * Metodo que expone servicio REST usando POST que agrega el video que recibe en Json
      * <b>URL: </b> http://"ip o nombre de host":8080/VideoAndes/rest/videos/video
