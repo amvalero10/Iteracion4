@@ -112,12 +112,12 @@ public class DAOTablaClienteUs {
 		String sql = "";
 		if(ordenar.equals("nada")){
 			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
-					+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
+					+ "from CLIENTEUS c inner JOIN PEDIDO p on c.ID = p.IDUSUARIO "
 					+ "where p.FECHA > '"+ini.getDate()+"/"+ini.getMonth()+"/"+ini.getYear()+"' AND p.FECHA < '"+fin.getDate()+"/"+fin.getMonth()+"/"+fin.getYear()+"' AND p.ID_RESTAURANTE ="+idr+" "
 					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL";
 		}else{
 			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL "
-					+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
+					+ "from CLIENTEUS c inner JOIN PEDIDO p on c.ID = p.IDUSUARIO "
 					+ "where p.FECHA > '"+ini.getDate()+"/"+ini.getMonth()+"/"+ini.getYear()+"' AND p.FECHA < '"+fin.getDate()+"/"+fin.getMonth()+"/"+fin.getYear()+"' AND p.ID_RESTAURANTE ="+idr+" "
 					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL "
 					+ "ORDER BY c."+ordenar;
@@ -147,7 +147,7 @@ public class DAOTablaClienteUs {
 		String sql = "";
 		
 			 sql = "select c.ID,c.TIPOID,c.NOMBRE,c.CORREO,c.ROL,p."+ordenar+" "
-					+ "from CLIENTEUS c full OUTER JOIN PEDIDO p on c.ID = p.IDUSUARIO "
+					+ "from CLIENTEUS c inner JOIN PEDIDO p on c.ID = p.IDUSUARIO "
 					+ "where p.FECHA > '"+ini.getDate()+"/"+ini.getMonth()+"/"+ini.getYear()+"' AND p.FECHA < '"+fin.getDate()+"/"+fin.getMonth()+"/"+fin.getYear()+"' AND p.ID_RESTAURANTE ="+idr+" "
 					+ "GROUP BY c.ID, c.TIPOID, c.NOMBRE, c.CORREO, c.ROL, p."+ordenar+" "
 					+ "ORDER BY p."+ordenar;
