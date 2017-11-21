@@ -19,6 +19,7 @@ import dao.DAOTablaRestaurante;
 import vos.AbstractAlimento;
 import vos.Entrada;
 import vos.Restaurante;
+import vos.RestauranteAux;
 import vos.Acompaniamiento;
 import vos.AdministradorUs;
 import vos.Bebida;
@@ -41,6 +42,7 @@ import vos.RestauranteUs;
 import vos.ServidoProducto;
 import vos.Tarjeta;
 import vos.Zona;
+import dao.DAOConsultaFuncionamiento;
 import dao.DAOConsultaPedidos;
 import dao.DAOTablaAcompaniamiento;
 import dao.DAOTablaAdministradorUs;
@@ -5700,52 +5702,76 @@ public class RotondAndesTM {
 	
 	
 ////////////
-//RFc11
+//RFC11
 ////////////
-//public ArrayList<ConsultaFuncionamiento> consultaFuncionamientoArray(Long idAdministrador) throws Exception{
-//
-//	ArrayList<ConsultaFuncionamiento> cfArray = null;
-//	
-//	DAOConsultaPedidos daoC = new DAOConsultaPedidos();
-//	
-//	try 
-//	{
-//		
-//		
-//		//////transaccion
-//		this.conn = darConexion();
-//		daoC.setConn(conn);
-//		
-//		
-//		
-//		Integer numpedidos = daoC.numeroDePedidos(idRestaurante);
-//		Double ganaciasGen = daoC.gananciasGenerdas(idRestaurante);
-//		
-//		
-//	
-//		
-//		
-//	} catch (SQLException e) {
-//		System.err.println("SQLException:" + e.getMessage());
-//		e.printStackTrace();
-//		throw e;
-//	} catch (Exception e) {
-//		System.err.println("GeneralException:" + e.getMessage());
-//		e.printStackTrace();
-//		throw e;
-//	} finally {
-//		try {
-//			daoC.cerrarRecursos();
-//			if(this.conn!=null)
-//				this.conn.close();
-//		} catch (SQLException exception) {
-//			System.err.println("SQLException closing resources:" + exception.getMessage());
-//			exception.printStackTrace();
-//			throw exception;
-//		}
-//	}
-//	return cfArray;	
-//}
+public ArrayList<ConsultaFuncionamiento> consultaFuncionamientoArray(Long idAdministrador) throws Exception{
+
+	ArrayList<ConsultaFuncionamiento> cfArray = new ArrayList<>();
+	
+	//valido el administrador
+			AdministradorUs admin = buscarAdministradorUsPorId(idAdministrador);
+			if(admin == null) throw new Exception("No tiene permisos para acceder a estos recursos");
+				
+			DAOConsultaFuncionamiento daoC = new DAOConsultaFuncionamiento();
+	
+	try 
+	{		
+		//////transaccion
+		this.conn = darConexion();
+		daoC.setConn(conn);
+		
+		
+		
+		//extraigo todas las fechas disponibles en las tablas
+		ArrayList<Date> fechasDisponibles = daoC.fechasDisponibles();
+		
+		Iterator iterDates = fechasDisponibles.iterator();
+		
+//		while(iterDates.hasNext()) 
+		for (int i = 0; i < 50; i++)
+		{
+			
+			
+			Date dateActual = (Date) iterDates.next();
+			
+			
+			RestauranteAux restauranteMasvisitado = daoC.restauranteMasVisitado(dateActual);
+			RestauranteAux restauranteMenosVisi =  daoC.restauranteMenosVisitado(dateActual);
+
+			
+			
+			String dia = daoC.diaActual;
+
+			ConsultaFuncionamiento consultActual = new ConsultaFuncionamiento(null, null, restauranteMasvisitado, restauranteMenosVisi, dateActual, dia);
+			cfArray.add(consultActual);
+			
+			
+			
+		}
+		
+		
+		
+	} catch (SQLException e) {
+		System.err.println("SQLException:" + e.getMessage());
+		e.printStackTrace();
+		throw e;
+	} catch (Exception e) {
+		System.err.println("GeneralException:" + e.getMessage());
+		e.printStackTrace();
+		throw e;
+	} finally {
+		try {
+			daoC.cerrarRecursos();
+			if(this.conn!=null)
+				this.conn.close();
+		} catch (SQLException exception) {
+			System.err.println("SQLException closing resources:" + exception.getMessage());
+			exception.printStackTrace();
+			throw exception;
+		}
+	}
+	return cfArray;	
+}
 		
 		
 		

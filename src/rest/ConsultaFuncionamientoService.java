@@ -12,6 +12,7 @@ import javax.ws.rs.core.MediaType;
 
 import tm.RotondAndesTM;
 import vos.ConsultaFuncionamiento;
+import vos.Menu;
 
 import javax.ws.rs.core.Response;
 
@@ -39,19 +40,21 @@ public class ConsultaFuncionamientoService {
 	}
 	
 	
-//	@GET
-//	@Produces( { MediaType.APPLICATION_JSON } )
-//	public Response consultaFuncionamiento(@PathParam("idAdministradores") Long idAdministradores) throws Exception {
-//		
-//		RotondAndesTM tm = new RotondAndesTM(getPath());
-//		
-//		ArrayList<ConsultaFuncionamiento> listConsulta = tm.consultaFuncionamientoArray(idAdministradores);
-//		
-//		
-//		
-////		ConsultaFuncionamiento cf = tm.con
-//
-//	}
+	@GET
+	@Produces({ MediaType.APPLICATION_JSON })
+	public Response consultaFuncionamiento(@PathParam("idAdministradores") Long idAdministradores) throws Exception {
+
+		RotondAndesTM tm = new RotondAndesTM(getPath());
+
+		try {
+			ArrayList<ConsultaFuncionamiento> listConsulta = tm.consultaFuncionamientoArray(idAdministradores);
+
+			return Response.status(200).entity(listConsulta).build();
+		} catch (Exception e) {
+			return Response.status(500).entity(doErrorMessage(e)).build();
+		}
+
+	}
 	
 	
 }
