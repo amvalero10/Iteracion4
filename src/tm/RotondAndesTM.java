@@ -5439,6 +5439,7 @@ public class RotondAndesTM {
 			Pedido pedidoF = new Pedido(id, idUsuario, mesa, costoFinal, idEntrada, idAcompani, idPlato, idBebida,
 					idPostre, fecha, "PENDIENTE", idRestaurante);
 			updatePedido(pedidoF);
+			
 
 		} catch (SQLException e) {
 			System.err.println("SQLException:" + e.getMessage());
@@ -5620,6 +5621,8 @@ public class RotondAndesTM {
 
 			
 			consulta = new ConsultaPedidos(idRestaurante, numpedidos, ganaciasGen, productos);
+			
+			
 			
 //			return consulta;
 
