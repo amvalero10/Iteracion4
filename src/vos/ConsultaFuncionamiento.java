@@ -18,13 +18,16 @@ public class ConsultaFuncionamiento {
 	private AbstractAlimento productoMenosC;
 	
 	@JsonProperty(value="restauranteMasF")
-	private Restaurante restauranteMasF;
+	private RestauranteAux restauranteMasF;
 	
 	@JsonProperty(value="restauranteMenosF")
-	private Restaurante restauranteMenosF;
+	private RestauranteAux restauranteMenosF;
 	
 	@JsonProperty(value="fecha")
 	private Date fecha;
+	
+	@JsonProperty(value="dia")
+	private String dia;
 	
 	
 	
@@ -33,15 +36,17 @@ public class ConsultaFuncionamiento {
 	
 	public ConsultaFuncionamiento(@JsonProperty(value="productoMasC") AbstractAlimento productoMasC,
 								@JsonProperty(value="productoMenosC") AbstractAlimento productoMenosC,
-								@JsonProperty(value="restauranteMasF") Restaurante restauranteMasF,
-								@JsonProperty(value="restauranteMenosF") Restaurante restauranteMenosF,
-								@JsonProperty(value="fecha")Date fecha) {
+								@JsonProperty(value="restauranteMasF") RestauranteAux restauranteMasF,
+								@JsonProperty(value="restauranteMenosF") RestauranteAux restauranteMenosF,
+								@JsonProperty(value="fecha")Date fecha,
+								@JsonProperty(value="dia")String dia) {
 		super();
 		this.productoMasC = productoMasC;
 		this.productoMenosC = productoMenosC;
 		this.restauranteMasF = restauranteMasF;
 		this.restauranteMenosF = restauranteMenosF;	
 		this.fecha = fecha;
+		this.dia = dia;
 	}
 	
 	
@@ -62,19 +67,19 @@ public class ConsultaFuncionamiento {
 	}
 
 	
-	public Restaurante getRestauranteMasF() {
+	public RestauranteAux getRestauranteMasF() {
 		return restauranteMasF;
 	}
-	public void setRestauranteMasF(Restaurante restauranteMasF) {
+	public void setRestauranteMasF(RestauranteAux restauranteMasF) {
 		this.restauranteMasF = restauranteMasF;
 	}
 
 	
 	
-	public Restaurante getRestauranteMenosF() {
+	public RestauranteAux getRestauranteMenosF() {
 		return restauranteMenosF;
 	}
-	public void setRestauranteMenosF(Restaurante restauranteMenosF) {
+	public void setRestauranteMenosF(RestauranteAux restauranteMenosF) {
 		this.restauranteMenosF = restauranteMenosF;
 	}
 
@@ -85,6 +90,15 @@ public class ConsultaFuncionamiento {
 	}
 	public void setFecha(Date fecha) {
 		this.fecha = fecha;
+	}
+
+
+
+	public String getDia() {
+		return dia;
+	}
+	public void setDia(String dia) {
+		this.dia = dia;
 	}
 
 	
